@@ -55,6 +55,24 @@ button_activate = "#F4BBFF"
 text_color = "#582D8C"
 
 #configs
+
+class chestIndividual():
+    def __init__(self, path):
+        self.imageSpot = Image.open(path).resize((150,150))
+        self.imagePlace = ImageTk.PhotoImage(self.imageSpot)
+        self.marker = Image.open("images/claws.png").resize((150,150)).convert("RGBA")
+        self.active = False
+    
+    def mark(self):
+        if self.active == False:
+            self.imageSpot = self.imageSpot.convert("RGBA")
+            finImage = Image.alpha_composite(self.imageSpot, self.marker)
+            self.active == True
+            return finImage
+        else:
+            self.active == False
+            return self.imagePlace
+
 def button_config(bg, active, fg):
     for world in buttons:
         world.configure(bg=bg, activebackground=active, foreground=fg)
@@ -75,16 +93,18 @@ def get_images(direct:str):
 
 def replace_images(direct):
     chests = get_images(direct)
+    for i in range(len(Spots)):
+        Spots[i].configure(image=emptySpot)
+        Spots[i].image = emptySpot
     for i in range(len(chests)):
         ches = Image.open(chests[i]).resize((150,150))
         ches = ImageTk.PhotoImage(ches)
         Spots[i].configure(image=ches)
         Spots[i].image = ches
-    pass
 
 def finish_overlays(spot):
-    img = ImageTk.getimage(spot.image)
-    img = Image.open(img).convert("RGBA")
+    img = spot.image
+    img = img.convert("RGBA")
     mark = Image.open("images/claws.png").resize((150,150)).convert("RGBA")
 
     finImage = Image.alpha_composite(img, mark)
@@ -103,6 +123,7 @@ def Origins():
 def Grasslands():
     button_config("red", "green", "yellow")
     label_config("red", "yellow")
+    replace_images("images/worlds/grasslands/")
     backg.itemconfig(backg_container,image=pGrasslands)
 
 def Jungle():
